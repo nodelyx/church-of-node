@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Node</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Georgia', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 40px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9em;
+            letter-spacing: 2px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .back-link:hover {
+            opacity: 0.7;
+        }
+        
+        .audio-list {
+            list-style: none;
+        }
+        
+        .audio-item {
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            border: 2px solid #ffffff;
+        }
+        
+        .dot:hover {
+            background-color: #e0e0e0;
+            box-shadow: 0 0 10px #ffffff;
+        }
+        
+        .dot.active {
+            background-color: #ffffff;
+            box-shadow: 0 0 20px #ffffff;
+        }
+        
+        .audio-player {
+            flex: 1;
+            display: none;
+        }
+        
+        .audio-player.active {
+            display: block;
+        }
+        
+        audio {
+            width: 100%;
+            outline: none;
+        }
+        
+        audio::-webkit-media-controls-panel {
+            background-color: #111111;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← BACK</a>
+        
+        <ul class="audio-list" id="audioList">
+            <li class="audio-item">
+                <div class="dot" onclick="playAudio(0)"></div>
+                <audio class="audio-player" id="audio-0">
+                    <source src="audio-0.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </li>
+            <li class="audio-item">
+                <div class="dot" onclick="playAudio(1)"></div>
+                <audio class="audio-player" id="audio-1">
+                    <source src="audio-1.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </li>
+            <li class="audio-item">
+                <div class="dot" onclick="playAudio(2)"></div>
+                <audio class="audio-player" id="audio-2">
+                    <source src="audio-2.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </li>
+            <li class="audio-item">
+                <div class="dot" onclick="playAudio(3)"></div>
+                <audio class="audio-player" id="audio-3">
+                    <source src="audio-3.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </li>
+            <li class="audio-item">
+                <div class="dot" onclick="playAudio(4)"></div>
+                <audio class="audio-player" id="audio-4">
+                    <source src="audio-4.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </li>
+        </ul>
+    </div>
+    
+    <script>
+        let currentAudio = null;
+        
+        function playAudio(index) {
+            // Stop current audio if playing
+            if (currentAudio !== null) {
+                document.getElementById('audio-' + currentAudio).pause();
+                document.getElementById('audio-' + currentAudio).currentTime = 0;
+                document.querySelectorAll('.dot')[currentAudio].classList.remove('active');
+                document.getElementById('audio-' + currentAudio).classList.remove('active');
+            }
+            
+            // Play selected audio
+            currentAudio = index;
+            const audio = document.getElementById('audio-' + index);
+            const dots = document.querySelectorAll('.dot');
+            
+            dots[index].classList.add('active');
+            audio.classList.add('active');
+            audio.play();
+        }
+    </script>
+</body>
+</html>

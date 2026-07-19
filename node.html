@@ -123,35 +123,35 @@
     <div class="container">
         <ul class="audio-list" id="audioList">
             <li class="audio-item">
-                <div class="dot" onclick="playAudio(0)"></div>
+                <div class="dot" onclick="toggleAudio(0)"></div>
                 <audio class="audio-player" id="audio-0">
                     <source src="1.wav" type="audio/wav">
                     Your browser does not support the audio element.
                 </audio>
             </li>
             <li class="audio-item">
-                <div class="dot" onclick="playAudio(1)"></div>
+                <div class="dot" onclick="toggleAudio(1)"></div>
                 <audio class="audio-player" id="audio-1">
                     <source src="2.wav" type="audio/wav">
                     Your browser does not support the audio element.
                 </audio>
             </li>
             <li class="audio-item">
-                <div class="dot" onclick="playAudio(2)"></div>
+                <div class="dot" onclick="toggleAudio(2)"></div>
                 <audio class="audio-player" id="audio-2">
                     <source src="3.wav" type="audio/wav">
                     Your browser does not support the audio element.
                 </audio>
             </li>
             <li class="audio-item">
-                <div class="dot" onclick="playAudio(3)"></div>
+                <div class="dot" onclick="toggleAudio(3)"></div>
                 <audio class="audio-player" id="audio-3">
                     <source src="4.wav" type="audio/wav">
                     Your browser does not support the audio element.
                 </audio>
             </li>
             <li class="audio-item">
-                <div class="dot" onclick="playAudio(4)"></div>
+                <div class="dot" onclick="toggleAudio(4)"></div>
                 <audio class="audio-player" id="audio-4">
                     <source src="5.wav" type="audio/wav">
                     Your browser does not support the audio element.
@@ -162,24 +162,40 @@
     
     <script>
         let currentAudio = null;
+        let audioStates = [false, false, false, false, false];
         
-        function playAudio(index) {
-            // Stop current audio if playing
-            if (currentAudio !== null) {
-                document.getElementById('audio-' + currentAudio).pause();
-                document.getElementById('audio-' + currentAudio).currentTime = 0;
-                document.querySelectorAll('.dot')[currentAudio].classList.remove('active');
-                document.getElementById('audio-' + currentAudio).classList.remove('active');
-            }
-            
-            // Play selected audio
-            currentAudio = index;
+        function toggleAudio(index) {
             const audio = document.getElementById('audio-' + index);
             const dots = document.querySelectorAll('.dot');
             
+            // If clicking the same dot that's playing, stop it
+            if (currentAudio === index && audioStates[index]) {
+                audio.pause();
+                audio.currentTime = 0;
+                dots[index].classList.remove('active');
+                audio.classList.remove('active');
+                audioStates[index] = false;
+                currentAudio = null;
+                return;
+            }
+            
+            // Stop any currently playing audio
+            if (currentAudio !== null && currentAudio !== index) {
+                const prevAudio = document.getElementById('audio-' + currentAudio);
+                prevAudio.pause();
+                prevAudio.currentTime = 0;
+                dots[currentAudio].classList.remove('active');
+                prevAudio.classList.remove('active');
+                audioStates[currentAudio] = false;
+            }
+            
+            // Play the new audio from the start
+            currentAudio = index;
+            audio.currentTime = 0;
             dots[index].classList.add('active');
             audio.classList.add('active');
             audio.play();
+            audioStates[index] = true;
         }
     </script>
 </body>

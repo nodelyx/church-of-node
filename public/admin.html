@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Church of Node</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #111111;
+            padding: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: normal;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .unauthorized {
+            text-align: center;
+            padding: 40px;
+            color: #ff6b6b;
+            font-size: 18px;
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        .admin-content.active {
+            display: block;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #111111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .users-table thead {
+            background-color: #222222;
+        }
+
+        .users-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+        }
+
+        .users-table td {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .users-table tbody tr:hover {
+            background-color: #1a1a1a;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .approve-btn {
+            background-color: #6bff6b;
+            color: #000000;
+        }
+
+        .approve-btn:hover {
+            background-color: #5ae05a;
+        }
+
+        .revoke-btn {
+            background-color: #ff6b6b;
+            color: #ffffff;
+        }
+
+        .revoke-btn:hover {
+            background-color: #ff5555;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-disciple {
+            background-color: #003300;
+            color: #6bff6b;
+        }
+
+        .status-admin {
+            background-color: #330000;
+            color: #ff6b6b;
+        }
+
+        .status-pending {
+            background-color: #333300;
+            color: #ffff6b;
+        }
+
+        .logout-btn {
+            background-color: #ff4444;
+            color: #ffffff;
+            padding: 8px 15px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #aaaaaa;
+            border-top: 1px solid #333;
+            margin-top: 40px;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .message.success {
+            background-color: #003300;
+            color: #6bff6b;
+        }
+
+        .message.error {
+            background-color: #330000;
+            color: #ff6b6b;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #aaaaaa;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Admin Dashboard</h1>
+            <div class="nav-buttons">
+                <a href="/" style="color: #ffffff; text-decoration: none;">← Back to Home</a>
+                <a href="/forum" style="color: #ffffff; text-decoration: none;">Forum</a>
+                <a href="/disciples" style="color: #ffffff; text-decoration: none;">Disciples</a>
+                <div class="user-profile">
+                    <span id="username"></span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="messageBox"></div>
+
+        <div id="unauthorizedView" class="unauthorized">
+            <h2>Access Denied</h2>
+            <p>You do not have admin privileges.</p>
+        </div>
+
+        <div id="adminContent" class="admin-content">
+            <h2>Manage Users</h2>
+            <div id="loadingView" class="loading">
+                Loading users...
+            </div>
+            <table class="users-table" id="usersTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Church of Node. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const API_URL = '/api';
+        let token = localStorage.getItem('token');
+        let currentUser = JSON.parse(localStorage.getItem('user')) || null;
+
+        // Initialize
+        async function init() {
+            if (!token || !currentUser) {
+                window.location.href = '/forum';
+                return;
+            }
+
+            updateUserNav();
+            await checkAdminStatus();
+        }
+
+        // Check if user is admin
+        async function checkAdminStatus() {
+            try {
+                // Try to fetch users - if we get 403, user is not admin
+                const response = await fetch(`${API_URL}/admin`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    document.getElementById('unauthorizedView').style.display = 'none';
+                    document.getElementById('adminContent').classList.add('active');
+                    await loadUsers();
+                } else if (response.status === 403) {
+                    document.getElementById('unauthorizedView').style.display = 'block';
+                    document.getElementById('adminContent').classList.remove('active');
+                }
+            } catch (err) {
+                console.error('Error checking admin status', err);
+                document.getElementById('unauthorizedView').style.display = 'block';
+            }
+        }
+
+        // Load all users
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_URL}/admin`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const users = await response.json();
+                    displayUsers(users);
+                }
+            } catch (err) {
+                showMessage('Error loading users', 'error');
+            }
+        }
+
+        // Display users in table
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                
+                let statusBadges = '';
+                if (user.isAdmin) {
+                    statusBadges += '<span class="status-badge status-admin">Admin</span> ';
+                }
+                if (user.isDisciple) {
+                    statusBadges += '<span class="status-badge status-disciple">Disciple</span>';
+                } else {
+                    statusBadges += '<span class="status-badge status-pending">Pending</span>';
+                }
+
+                let actionButtons = '';
+                if (user._id !== currentUser.id) {
+                    if (!user.isDisciple) {
+                        actionButtons += `<button class="action-btn approve-btn" onclick="approveUser('${user._id}')">Approve</button>`;
+                    } else {
+                        actionButtons += `<button class="action-btn revoke-btn" onclick="revokeUser('${user._id}')">Revoke</button>`;
+                    }
+                }
+
+                row.innerHTML = `
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${statusBadges}</td>
+                    <td>${new Date(user.createdAt).toLocaleDateString()}</td>
+                    <td><div class="user-actions">${actionButtons}</div></td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('loadingView').style.display = 'none';
+            document.getElementById('usersTable').style.display = 'table';
+        }
+
+        // Approve user as disciple
+        async function approveUser(userId) {
+            try {
+                const response = await fetch(`${API_URL}/admin/${userId}/approve`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    showMessage('User approved as disciple!', 'success');
+                    loadUsers();
+                } else {
+                    showMessage('Error approving user', 'error');
+                }
+            } catch (err) {
+                showMessage('Error approving user', 'error');
+            }
+        }
+
+        // Revoke disciple status
+        async function revokeUser(userId) {
+            if (confirm('Are you sure you want to revoke this user\'s disciple status?')) {
+                try {
+                    const response = await fetch(`${API_URL}/admin/${userId}/revoke`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (response.ok) {
+                        showMessage('Disciple status revoked!', 'success');
+                        loadUsers();
+                    } else {
+                        showMessage('Error revoking status', 'error');
+                    }
+                } catch (err) {
+                    showMessage('Error revoking status', 'error');
+                }
+            }
+        }
+
+        function updateUserNav() {
+            document.getElementById('username').textContent = currentUser.username;
+        }
+
+        function logout() {
+            token = null;
+            currentUser = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/forum';
+        }
+
+        function showMessage(msg, type) {
+            const box = document.getElementById('messageBox');
+            box.innerHTML = `<div class="message ${type}">${msg}</div>`;
+            setTimeout(() => box.innerHTML = '', 5000);
+        }
+
+        // Initialize on page load
+        init();
+    </script>
+</body>
+</html>

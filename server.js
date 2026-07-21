@@ -28,6 +28,9 @@ app.use('/api/replies', require('./routes/replies'));
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/users', require('./routes/users'));
 
+// Serve forum static files
+app.use('/forum', express.static(path.join(__dirname, 'public', 'forum')));
+
 // Serve main website
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

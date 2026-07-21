@@ -18,6 +18,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/church-of
 }).then(() => {
   console.log('MongoDB connected');
   createDefaultCategories();
+  setupAdmin();
 }).catch(err => {
   console.log('MongoDB connection error:', err);
 });
@@ -41,6 +42,23 @@ async function createDefaultCategories() {
     }
   } catch (err) {
     console.log('Error creating default categories:', err.message);
+  }
+}
+
+// Setup admin user (first user with username 'nodelyx')
+async function setupAdmin() {
+  try {
+    const User = require('./models/User');
+    const user = await User.findOne({ username: 'nodelyx' });
+    
+    if (user && !user.isAdmin) {
+      user.isAdmin = true;
+      user.isDisciple = true;
+      await user.save();
+      console.log('Admin user set up successfully');
+    }
+  } catch (err) {
+    console.log('Error setting up admin:', err.message);
   }
 }
 

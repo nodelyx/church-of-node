@@ -63,52 +63,6 @@
             padding: 0 20px;
         }
 
-        .categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .category-card {
-            background-color: #111111;
-            padding: 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid #333;
-        }
-
-        .category-card:hover {
-            border-color: #ffffff;
-            transform: translateY(-2px);
-        }
-
-        .category-name {
-            font-size: 18px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .category-desc {
-            font-size: 14px;
-            color: #aaaaaa;
-        }
-
-        .threads-section {
-            display: none;
-        }
-
-        .threads-section.active {
-            display: block;
-        }
-
-        .back-button {
-            margin-bottom: 20px;
-            background-color: #333333;
-            color: #ffffff;
-        }
-
         .thread-item {
             background-color: #111111;
             padding: 15px;
@@ -298,6 +252,20 @@
             color: #ffffff;
             padding: 8px 15px;
         }
+
+        .back-button {
+            margin-bottom: 20px;
+            background-color: #333333;
+            color: #ffffff;
+        }
+
+        .threads-view {
+            display: block;
+        }
+
+        .threads-view.hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -323,16 +291,9 @@
     <div class="container">
         <div id="messageBox"></div>
 
-        <!-- Categories View -->
-        <div id="categoriesView" class="active">
-            <h2 style="margin-bottom: 30px;">Community Discussion Board</h2>
-            <div class="categories" id="categoriesList"></div>
-        </div>
-
         <!-- Threads View -->
-        <div id="threadsView" class="threads-section">
-            <button class="back-button" onclick="backToCategories()">← Back to Categories</button>
-            <h2 id="categoryTitle" style="margin-bottom: 20px;"></h2>
+        <div id="threadsView" class="threads-view">
+            <h2 style="margin-bottom: 20px;">Community Discussion</h2>
             <button class="create-thread-btn" onclick="showCreateThreadForm()" id="createThreadBtn" style="display: none;">Create New Thread</button>
             <div id="threadsList"></div>
         </div>
@@ -414,13 +375,13 @@
         const API_URL = '/api';
         let token = localStorage.getItem('token');
         let currentUser = JSON.parse(localStorage.getItem('user')) || null;
-        let currentCategoryId = null;
         let currentThreadId = null;
+        let currentCategoryId = null;
 
         // Initialize
         function init() {
             updateUserNav();
-            loadCategories();
+            loadThreads();
         }
 
         // Update user navigation
@@ -432,64 +393,28 @@
                 userNav.style.display = 'none';
                 loggedInNav.style.display = 'flex';
                 document.getElementById('username').textContent = currentUser.username;
+                document.getElementById('createThreadBtn').style.display = 'inline-block';
             } else {
                 userNav.style.display = 'flex';
                 loggedInNav.style.display = 'none';
+                document.getElementById('createThreadBtn').style.display = 'none';
             }
-        }
-
-        // Load categories
-        async function loadCategories() {
-            try {
-                const response = await fetch(`${API_URL}/categories`);
-                const categories = await response.json();
-                const list = document.getElementById('categoriesList');
-                list.innerHTML = '';
-
-                categories.forEach(cat => {
-                    const card = document.createElement('div');
-                    card.className = 'category-card';
-                    card.onclick = () => viewCategory(cat._id, cat.name);
-                    card.innerHTML = `
-                        <div class="category-name" style="color: ${cat.color}">${cat.name}</div>
-                        <div class="category-desc">${cat.description}</div>
-                    `;
-                    list.appendChild(card);
-                });
-            } catch (err) {
-                showMessage('Error loading categories', 'error');
-            }
-        }
-
-        // View category threads
-        function viewCategory(categoryId, categoryName) {
-            currentCategoryId = categoryId;
-            document.getElementById('categoriesView').classList.remove('active');
-            document.getElementById('threadsView').classList.add('active');
-            document.getElementById('categoryTitle').textContent = categoryName;
-
-            if (token) {
-                document.getElementById('createThreadBtn').style.display = 'inline-block';
-            }
-
-            loadThreads(categoryId);
         }
 
         // Load threads
-        async function loadThreads(categoryId) {
+        async function loadThreads() {
             try {
                 const response = await fetch(`${API_URL}/threads`);
                 const threads = await response.json();
-                const filtered = threads.filter(t => t.category._id === categoryId);
                 const list = document.getElementById('threadsList');
                 list.innerHTML = '';
 
-                if (filtered.length === 0) {
+                if (threads.length === 0) {
                     list.innerHTML = '<p style="color: #aaaaaa;">No threads yet. Be the first to create one!</p>';
                     return;
                 }
 
-                filtered.forEach(thread => {
+                threads.forEach(thread => {
                     const item = document.createElement('div');
                     item.className = 'thread-item';
                     item.onclick = () => viewThread(thread._id);
@@ -514,7 +439,7 @@
                 const thread = await response.json();
                 currentThreadId = threadId;
 
-                document.getElementById('threadsView').classList.remove('active');
+                document.getElementById('threadsView').classList.add('hidden');
                 document.getElementById('threadDetailView').classList.add('active');
 
                 document.getElementById('detailTitle').textContent = thread.title;
@@ -591,7 +516,7 @@
                     showMessage('Account created successfully!', 'success');
                     updateUserNav();
                     document.getElementById('registerSection').classList.remove('active');
-                    document.getElementById('categoriesView').classList.add('active');
+                    document.getElementById('threadsView').classList.remove('hidden');
                 } else {
                     showMessage(data.error || 'Registration failed', 'error');
                 }
@@ -626,7 +551,7 @@
                     showMessage('Logged in successfully!', 'success');
                     updateUserNav();
                     document.getElementById('loginSection').classList.remove('active');
-                    document.getElementById('categoriesView').classList.add('active');
+                    document.getElementById('threadsView').classList.remove('hidden');
                 } else {
                     showMessage(data.error || 'Login failed', 'error');
                 }
@@ -641,7 +566,7 @@
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             updateUserNav();
-            document.getElementById('categoriesView').classList.add('active');
+            document.getElementById('threadsView').classList.remove('hidden');
             document.getElementById('loginSection').classList.remove('active');
             document.getElementById('registerSection').classList.remove('active');
             showMessage('Logged out successfully!', 'success');
@@ -672,8 +597,8 @@
                     document.getElementById('threadTitle').value = '';
                     document.getElementById('threadContent').value = '';
                     document.getElementById('createThreadSection').classList.remove('active');
-                    loadThreads(currentCategoryId);
-                    document.getElementById('threadsView').classList.add('active');
+                    loadThreads();
+                    document.getElementById('threadsView').classList.remove('hidden');
                 } else {
                     showMessage('Error creating thread', 'error');
                 }
@@ -734,28 +659,25 @@
 
         // UI Navigation
         function showLoginForm() {
-            document.getElementById('categoriesView').classList.remove('active');
+            document.getElementById('threadsView').classList.add('hidden');
             document.getElementById('loginSection').classList.add('active');
         }
 
         function showRegisterForm() {
-            document.getElementById('categoriesView').classList.remove('active');
+            document.getElementById('threadsView').classList.add('hidden');
             document.getElementById('registerSection').classList.add('active');
         }
 
         function showCreateThreadForm() {
-            document.getElementById('threadsView').classList.remove('active');
+            document.getElementById('threadsView').classList.add('hidden');
             document.getElementById('createThreadSection').classList.add('active');
-        }
-
-        function backToCategories() {
-            document.getElementById('threadsView').classList.remove('active');
-            document.getElementById('categoriesView').classList.add('active');
         }
 
         function backToThreads() {
             document.getElementById('threadDetailView').classList.remove('active');
-            document.getElementById('threadsView').classList.add('active');
+            document.getElementById('createThreadSection').classList.remove('active');
+            document.getElementById('threadsView').classList.remove('hidden');
+            loadThreads();
         }
 
         function showMessage(msg, type) {

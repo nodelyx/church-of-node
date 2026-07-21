@@ -50,6 +50,8 @@ app.use('/api/threads', require('./routes/threads'));
 app.use('/api/replies', require('./routes/replies'));
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/users', require('./routes/users'));
+app.use('/api/admin', require('./routes/admin'));
+app.use('/api/messages', require('./routes/messages'));
 
 // Serve forum static files
 app.use('/forum', express.static(path.join(__dirname, 'public', 'forum')));
@@ -62,6 +64,11 @@ app.get('/', (req, res) => {
 // Serve forum
 app.get('/forum', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'forum', 'index.html'));
+});
+
+// Serve disciples page
+app.get('/disciples', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'disciples.html'));
 });
 
 // Serve node.html

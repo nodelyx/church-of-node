@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Church of Node - Community Forum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #111111;
+            padding: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: normal;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .category-card {
+            background-color: #111111;
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #333;
+        }
+
+        .category-card:hover {
+            border-color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .category-name {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .category-desc {
+            font-size: 14px;
+            color: #aaaaaa;
+        }
+
+        .threads-section {
+            display: none;
+        }
+
+        .threads-section.active {
+            display: block;
+        }
+
+        .back-button {
+            margin-bottom: 20px;
+            background-color: #333333;
+            color: #ffffff;
+        }
+
+        .thread-item {
+            background-color: #111111;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .thread-item:hover {
+            border-color: #ffffff;
+        }
+
+        .thread-info {
+            flex: 1;
+        }
+
+        .thread-title {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .thread-meta {
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+
+        .thread-replies {
+            color: #aaaaaa;
+            font-size: 14px;
+        }
+
+        .create-thread-btn {
+            margin-bottom: 20px;
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .auth-section {
+            display: none;
+        }
+
+        .auth-section.active {
+            display: block;
+            max-width: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            background-color: #111111;
+            border: 1px solid #333;
+            color: #ffffff;
+            border-radius: 4px;
+            font-family: 'Georgia', serif;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #ffffff;
+        }
+
+        .thread-detail {
+            display: none;
+            background-color: #111111;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .thread-detail.active {
+            display: block;
+        }
+
+        .thread-detail-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .thread-detail-meta {
+            color: #aaaaaa;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .thread-detail-content {
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .replies-section {
+            margin-top: 30px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+        }
+
+        .reply-item {
+            background-color: #000000;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 2px solid #ffffff;
+            border-radius: 4px;
+        }
+
+        .reply-author {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .reply-content {
+            margin-bottom: 10px;
+        }
+
+        .reply-meta {
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+
+        .login-section {
+            display: none;
+        }
+
+        .login-section.active {
+            display: block;
+            max-width: 400px;
+        }
+
+        .auth-toggle {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .auth-toggle a {
+            color: #ffffff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .message.error {
+            background-color: #330000;
+            color: #ff6b6b;
+        }
+
+        .message.success {
+            background-color: #003300;
+            color: #6bff6b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #aaaaaa;
+            border-top: 1px solid #333;
+            margin-top: 40px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logout-btn {
+            background-color: #ff4444;
+            color: #ffffff;
+            padding: 8px 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Church of Node</h1>
+            <div class="nav-buttons">
+                <a href="/" style="color: #ffffff; text-decoration: none;">← Back to Home</a>
+                <div id="userNav">
+                    <button onclick="showLoginForm()">Login</button>
+                    <button onclick="showRegisterForm()">Register</button>
+                </div>
+                <div id="loggedInNav" style="display: none;">
+                    <div class="user-profile">
+                        <span id="username"></span>
+                        <button class="logout-btn" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="messageBox"></div>
+
+        <!-- Categories View -->
+        <div id="categoriesView" class="active">
+            <h2 style="margin-bottom: 30px;">Community Discussion Board</h2>
+            <div class="categories" id="categoriesList"></div>
+        </div>
+
+        <!-- Threads View -->
+        <div id="threadsView" class="threads-section">
+            <button class="back-button" onclick="backToCategories()">← Back to Categories</button>
+            <h2 id="categoryTitle" style="margin-bottom: 20px;"></h2>
+            <button class="create-thread-btn" onclick="showCreateThreadForm()" id="createThreadBtn" style="display: none;">Create New Thread</button>
+            <div id="threadsList"></div>
+        </div>
+
+        <!-- Thread Detail View -->
+        <div id="threadDetailView" class="thread-detail">
+            <button class="back-button" onclick="backToThreads()">← Back to Threads</button>
+            <h2 id="detailTitle" class="thread-detail-title"></h2>
+            <div id="detailMeta" class="thread-detail-meta"></div>
+            <div id="detailContent" class="thread-detail-content"></div>
+            <div id="detailLikes"></div>
+            <div class="replies-section" id="repliesSection"></div>
+            <div id="replyForm" style="display: none; margin-top: 30px;">
+                <h3>Add Reply</h3>
+                <div class="form-group">
+                    <textarea id="replyContent" placeholder="Your reply..."></textarea>
+                </div>
+                <button onclick="submitReply()">Post Reply</button>
+            </div>
+        </div>
+
+        <!-- Auth Forms -->
+        <div id="loginSection" class="login-section">
+            <h2 style="margin-bottom: 20px;">Login</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••">
+            </div>
+            <button onclick="login()" style="width: 100%;">Login</button>
+            <div class="auth-toggle">
+                Don't have an account? <a onclick="showRegisterForm()">Register here</a>
+            </div>
+        </div>
+
+        <div id="registerSection" class="auth-section">
+            <h2 style="margin-bottom: 20px;">Create Account</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="registerUsername" placeholder="your username">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="registerEmail" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="registerPassword" placeholder="••••••••">
+            </div>
+            <button onclick="register()" style="width: 100%;">Create Account</button>
+            <div class="auth-toggle">
+                Already have an account? <a onclick="showLoginForm()">Login here</a>
+            </div>
+        </div>
+
+        <div id="createThreadSection" class="auth-section">
+            <h2 style="margin-bottom: 20px;">Create New Thread</h2>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="threadTitle" placeholder="Thread title">
+            </div>
+            <div class="form-group">
+                <label>Content</label>
+                <textarea id="threadContent" placeholder="Write your thread content..."></textarea>
+            </div>
+            <button onclick="submitThread()" style="width: 100%;">Create Thread</button>
+            <button onclick="backToThreads()" style="width: 100%; background-color: #333333; margin-top: 10px;">Cancel</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Church of Node. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const API_URL = '/api';
+        let token = localStorage.getItem('token');
+        let currentUser = JSON.parse(localStorage.getItem('user')) || null;
+        let currentCategoryId = null;
+        let currentThreadId = null;
+
+        // Initialize
+        function init() {
+            updateUserNav();
+            loadCategories();
+        }
+
+        // Update user navigation
+        function updateUserNav() {
+            const userNav = document.getElementById('userNav');
+            const loggedInNav = document.getElementById('loggedInNav');
+
+            if (token && currentUser) {
+                userNav.style.display = 'none';
+                loggedInNav.style.display = 'flex';
+                document.getElementById('username').textContent = currentUser.username;
+            } else {
+                userNav.style.display = 'flex';
+                loggedInNav.style.display = 'none';
+            }
+        }
+
+        // Load categories
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_URL}/categories`);
+                const categories = await response.json();
+                const list = document.getElementById('categoriesList');
+                list.innerHTML = '';
+
+                categories.forEach(cat => {
+                    const card = document.createElement('div');
+                    card.className = 'category-card';
+                    card.onclick = () => viewCategory(cat._id, cat.name);
+                    card.innerHTML = `
+                        <div class="category-name" style="color: ${cat.color}">${cat.name}</div>
+                        <div class="category-desc">${cat.description}</div>
+                    `;
+                    list.appendChild(card);
+                });
+            } catch (err) {
+                showMessage('Error loading categories', 'error');
+            }
+        }
+
+        // View category threads
+        function viewCategory(categoryId, categoryName) {
+            currentCategoryId = categoryId;
+            document.getElementById('categoriesView').classList.remove('active');
+            document.getElementById('threadsView').classList.add('active');
+            document.getElementById('categoryTitle').textContent = categoryName;
+
+            if (token) {
+                document.getElementById('createThreadBtn').style.display = 'inline-block';
+            }
+
+            loadThreads(categoryId);
+        }
+
+        // Load threads
+        async function loadThreads(categoryId) {
+            try {
+                const response = await fetch(`${API_URL}/threads`);
+                const threads = await response.json();
+                const filtered = threads.filter(t => t.category._id === categoryId);
+                const list = document.getElementById('threadsList');
+                list.innerHTML = '';
+
+                if (filtered.length === 0) {
+                    list.innerHTML = '<p style="color: #aaaaaa;">No threads yet. Be the first to create one!</p>';
+                    return;
+                }
+
+                filtered.forEach(thread => {
+                    const item = document.createElement('div');
+                    item.className = 'thread-item';
+                    item.onclick = () => viewThread(thread._id);
+                    item.innerHTML = `
+                        <div class="thread-info">
+                            <div class="thread-title">${thread.title}</div>
+                            <div class="thread-meta">by ${thread.author.username} • ${new Date(thread.createdAt).toLocaleDateString()}</div>
+                        </div>
+                        <div class="thread-replies">${thread.replies.length} replies</div>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch (err) {
+                showMessage('Error loading threads', 'error');
+            }
+        }
+
+        // View thread detail
+        async function viewThread(threadId) {
+            try {
+                const response = await fetch(`${API_URL}/threads/${threadId}`);
+                const thread = await response.json();
+                currentThreadId = threadId;
+
+                document.getElementById('threadsView').classList.remove('active');
+                document.getElementById('threadDetailView').classList.add('active');
+
+                document.getElementById('detailTitle').textContent = thread.title;
+                document.getElementById('detailMeta').innerHTML = `
+                    by <strong>${thread.author.username}</strong> • ${new Date(thread.createdAt).toLocaleDateString()}
+                `;
+                document.getElementById('detailContent').textContent = thread.content;
+
+                // Likes
+                const likeCount = thread.likes.length;
+                const userLiked = token && thread.likes.some(id => id === currentUser.id);
+                document.getElementById('detailLikes').innerHTML = `
+                    <button onclick="likeThread()" style="background-color: ${userLiked ? '#ffffff' : '#333333'}; color: ${userLiked ? '#000000' : '#ffffff'};">
+                        ❤ ${likeCount}
+                    </button>
+                `;
+
+                // Replies
+                const repliesSection = document.getElementById('repliesSection');
+                repliesSection.innerHTML = '<h3>Replies</h3>';
+
+                if (thread.replies.length > 0) {
+                    thread.replies.forEach(reply => {
+                        const item = document.createElement('div');
+                        item.className = 'reply-item';
+                        item.innerHTML = `
+                            <div class="reply-author">${reply.author.username}</div>
+                            <div class="reply-content">${reply.content}</div>
+                            <div class="reply-meta">${new Date(reply.createdAt).toLocaleDateString()}</div>
+                        `;
+                        repliesSection.appendChild(item);
+                    });
+                } else {
+                    repliesSection.innerHTML += '<p style="color: #aaaaaa;">No replies yet.</p>';
+                }
+
+                // Reply form
+                const replyForm = document.getElementById('replyForm');
+                if (token) {
+                    replyForm.style.display = 'block';
+                } else {
+                    replyForm.style.display = 'none';
+                }
+            } catch (err) {
+                showMessage('Error loading thread', 'error');
+            }
+        }
+
+        // Authentication functions
+        async function register() {
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            if (!username || !email || !password) {
+                showMessage('Please fill all fields', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    token = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                    showMessage('Account created successfully!', 'success');
+                    updateUserNav();
+                    document.getElementById('registerSection').classList.remove('active');
+                    document.getElementById('categoriesView').classList.add('active');
+                } else {
+                    showMessage(data.error || 'Registration failed', 'error');
+                }
+            } catch (err) {
+                showMessage('Error registering', 'error');
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showMessage('Please fill all fields', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    token = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('token', token);
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                    showMessage('Logged in successfully!', 'success');
+                    updateUserNav();
+                    document.getElementById('loginSection').classList.remove('active');
+                    document.getElementById('categoriesView').classList.add('active');
+                } else {
+                    showMessage(data.error || 'Login failed', 'error');
+                }
+            } catch (err) {
+                showMessage('Error logging in', 'error');
+            }
+        }
+
+        function logout() {
+            token = null;
+            currentUser = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            updateUserNav();
+            document.getElementById('categoriesView').classList.add('active');
+            document.getElementById('loginSection').classList.remove('active');
+            document.getElementById('registerSection').classList.remove('active');
+            showMessage('Logged out successfully!', 'success');
+        }
+
+        // Thread functions
+        async function submitThread() {
+            const title = document.getElementById('threadTitle').value;
+            const content = document.getElementById('threadContent').value;
+
+            if (!title || !content) {
+                showMessage('Please fill all fields', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/threads`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ title, content, categoryId: currentCategoryId })
+                });
+
+                if (response.ok) {
+                    showMessage('Thread created successfully!', 'success');
+                    document.getElementById('threadTitle').value = '';
+                    document.getElementById('threadContent').value = '';
+                    document.getElementById('createThreadSection').classList.remove('active');
+                    loadThreads(currentCategoryId);
+                    document.getElementById('threadsView').classList.add('active');
+                } else {
+                    showMessage('Error creating thread', 'error');
+                }
+            } catch (err) {
+                showMessage('Error creating thread', 'error');
+            }
+        }
+
+        async function submitReply() {
+            const content = document.getElementById('replyContent').value;
+
+            if (!content) {
+                showMessage('Please write a reply', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/replies`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ content, threadId: currentThreadId })
+                });
+
+                if (response.ok) {
+                    showMessage('Reply posted!', 'success');
+                    document.getElementById('replyContent').value = '';
+                    viewThread(currentThreadId);
+                } else {
+                    showMessage('Error posting reply', 'error');
+                }
+            } catch (err) {
+                showMessage('Error posting reply', 'error');
+            }
+        }
+
+        async function likeThread() {
+            if (!token) {
+                showMessage('Please login to like threads', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/threads/${currentThreadId}/like`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    viewThread(currentThreadId);
+                }
+            } catch (err) {
+                showMessage('Error liking thread', 'error');
+            }
+        }
+
+        // UI Navigation
+        function showLoginForm() {
+            document.getElementById('categoriesView').classList.remove('active');
+            document.getElementById('loginSection').classList.add('active');
+        }
+
+        function showRegisterForm() {
+            document.getElementById('categoriesView').classList.remove('active');
+            document.getElementById('registerSection').classList.add('active');
+        }
+
+        function showCreateThreadForm() {
+            document.getElementById('threadsView').classList.remove('active');
+            document.getElementById('createThreadSection').classList.add('active');
+        }
+
+        function backToCategories() {
+            document.getElementById('threadsView').classList.remove('active');
+            document.getElementById('categoriesView').classList.add('active');
+        }
+
+        function backToThreads() {
+            document.getElementById('threadDetailView').classList.remove('active');
+            document.getElementById('threadsView').classList.add('active');
+        }
+
+        function showMessage(msg, type) {
+            const box = document.getElementById('messageBox');
+            box.innerHTML = `<div class="message ${type}">${msg}</div>`;
+            setTimeout(() => box.innerHTML = '', 5000);
+        }
+
+        // Initialize on page load
+        init();
+    </script>
+</body>
+</html>

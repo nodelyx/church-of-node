@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disciples - Church of Node</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #111111;
+            padding: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: normal;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .chat-container {
+            background-color: #111111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            background-color: #000000;
+            padding: 12px;
+            border-left: 2px solid #ffffff;
+            border-radius: 4px;
+        }
+
+        .message-author {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #aaaaaa;
+        }
+
+        .message-content {
+            word-wrap: break-word;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #666666;
+            margin-top: 5px;
+        }
+
+        .input-area {
+            padding: 20px;
+            border-top: 1px solid #333;
+            display: flex;
+            gap: 10px;
+        }
+
+        textarea {
+            flex: 1;
+            padding: 10px;
+            background-color: #000000;
+            border: 1px solid #333;
+            color: #ffffff;
+            border-radius: 4px;
+            font-family: 'Georgia', serif;
+            resize: none;
+            max-height: 100px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #ffffff;
+        }
+
+        .send-btn {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .unauthorized {
+            text-align: center;
+            padding: 40px;
+            color: #ff6b6b;
+        }
+
+        .logout-btn {
+            background-color: #ff4444;
+            color: #ffffff;
+            padding: 8px 15px;
+        }
+
+        .message {
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #aaaaaa;
+            border-top: 1px solid #333;
+            margin-top: 40px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Disciples</h1>
+            <div class="nav-buttons">
+                <a href="/" style="color: #ffffff; text-decoration: none;">← Back to Home</a>
+                <a href="/forum" style="color: #ffffff; text-decoration: none;">Forum</a>
+                <div id="userNav">
+                    <button onclick="login()">Login</button>
+                </div>
+                <div id="loggedInNav" style="display: none;">
+                    <div class="user-profile">
+                        <span id="username"></span>
+                        <button class="logout-btn" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="chatView" style="display: none;">
+            <div class="chat-container">
+                <div class="messages" id="messages"></div>
+                <div class="input-area">
+                    <textarea id="messageInput" placeholder="Type your message..." rows="2"></textarea>
+                    <button class="send-btn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+        <div id="unauthorizedView" class="unauthorized">
+            <h2>Access Denied</h2>
+            <p>You are not approved as a disciple yet.</p>
+            <p>Contact an administrator to request access.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Church of Node. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const API_URL = '/api';
+        let token = localStorage.getItem('token');
+        let currentUser = JSON.parse(localStorage.getItem('user')) || null;
+        let isDisciple = false;
+
+        // Initialize
+        async function init() {
+            if (!token || !currentUser) {
+                window.location.href = '/forum';
+                return;
+            }
+
+            updateUserNav();
+            await checkDiscpleStatus();
+            if (isDisciple) {
+                loadMessages();
+                setInterval(loadMessages, 2000);
+            }
+        }
+
+        // Check if user is approved disciple
+        async function checkDiscpleStatus() {
+            try {
+                const response = await fetch(`${API_URL}/threads`);
+                const threads = await response.json();
+                
+                // Fetch current user from server to get latest status
+                const usersResponse = await fetch(`${API_URL}/admin`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (usersResponse.ok) {
+                    const users = await usersResponse.json();
+                    const user = users.find(u => u._id === currentUser.id);
+                    if (user && user.isDisciple) {
+                        isDisciple = true;
+                        document.getElementById('chatView').style.display = 'block';
+                        document.getElementById('unauthorizedView').style.display = 'none';
+                    } else {
+                        document.getElementById('chatView').style.display = 'none';
+                        document.getElementById('unauthorizedView').style.display = 'block';
+                    }
+                }
+            } catch (err) {
+                console.error('Error checking status');
+            }
+        }
+
+        // Load messages
+        async function loadMessages() {
+            try {
+                const response = await fetch(`${API_URL}/messages`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const messages = await response.json();
+                    const messagesDiv = document.getElementById('messages');
+                    
+                    messagesDiv.innerHTML = '';
+                    messages.forEach(msg => {
+                        const msgElement = document.createElement('div');
+                        msgElement.className = 'message';
+                        msgElement.innerHTML = `
+                            <div class="message-author">${msg.author.username}</div>
+                            <div class="message-content">${escapeHtml(msg.content)}</div>
+                            <div class="message-time">${new Date(msg.createdAt).toLocaleTimeString()}</div>
+                        `;
+                        messagesDiv.appendChild(msgElement);
+                    });
+
+                    // Auto scroll to bottom
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                } else if (response.status === 403) {
+                    isDisciple = false;
+                    document.getElementById('chatView').style.display = 'none';
+                    document.getElementById('unauthorizedView').style.display = 'block';
+                }
+            } catch (err) {
+                console.error('Error loading messages');
+            }
+        }
+
+        // Send message
+        async function sendMessage() {
+            const content = document.getElementById('messageInput').value.trim();
+
+            if (!content) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ content })
+                });
+
+                if (response.ok) {
+                    document.getElementById('messageInput').value = '';
+                    loadMessages();
+                }
+            } catch (err) {
+                console.error('Error sending message');
+            }
+        }
+
+        function updateUserNav() {
+            const userNav = document.getElementById('userNav');
+            const loggedInNav = document.getElementById('loggedInNav');
+
+            if (token && currentUser) {
+                userNav.style.display = 'none';
+                loggedInNav.style.display = 'flex';
+                document.getElementById('username').textContent = currentUser.username;
+            } else {
+                userNav.style.display = 'flex';
+                loggedInNav.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            token = null;
+            currentUser = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/forum';
+        }
+
+        function login() {
+            window.location.href = '/forum';
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Initialize on page load
+        init();
+    </script>
+</body>
+</html>

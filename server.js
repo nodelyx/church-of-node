@@ -17,9 +17,32 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/church-of
   useUnifiedTopology: true,
 }).then(() => {
   console.log('MongoDB connected');
+  createDefaultCategories();
 }).catch(err => {
   console.log('MongoDB connection error:', err);
 });
+
+// Create default categories if they don't exist
+async function createDefaultCategories() {
+  try {
+    const Category = require('./models/Category');
+    const count = await Category.countDocuments();
+    
+    if (count === 0) {
+      const defaultCategories = [
+        { name: 'General Discussion', description: 'General topics and discussion', color: '#ffffff' },
+        { name: 'Node.js', description: 'Discuss Node.js and JavaScript', color: '#68a063' },
+        { name: 'Web Development', description: 'Web development topics', color: '#f7df1e' },
+        { name: 'Help & Support', description: 'Get help and support from the community', color: '#ff6b6b' },
+      ];
+      
+      await Category.insertMany(defaultCategories);
+      console.log('Default categories created');
+    }
+  } catch (err) {
+    console.log('Error creating default categories:', err.message);
+  }
+}
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));

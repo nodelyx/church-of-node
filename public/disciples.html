@@ -305,7 +305,9 @@
 
                 if (usersResponse.ok) {
                     const users = await usersResponse.json();
-                    const user = users.find(u => u._id === currentUser.id);
+                    // Convert both to strings for reliable comparison
+                    const userId = String(currentUser.id);
+                    const user = users.find(u => String(u._id) === userId);
                     if (user && user.isDisciple) {
                         isDisciple = true;
                         document.getElementById('chatView').classList.remove('hidden');
@@ -314,9 +316,15 @@
                         document.getElementById('chatView').classList.add('hidden');
                         document.getElementById('unauthorizedView').style.display = 'block';
                     }
+                } else if (usersResponse.status === 403) {
+                    // User is not admin, can't access admin API
+                    document.getElementById('chatView').classList.add('hidden');
+                    document.getElementById('unauthorizedView').style.display = 'block';
                 }
             } catch (err) {
-                console.error('Error checking status');
+                console.error('Error checking status', err);
+                document.getElementById('chatView').classList.add('hidden');
+                document.getElementById('unauthorizedView').style.display = 'block';
             }
         }
 

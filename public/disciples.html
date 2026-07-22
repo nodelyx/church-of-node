@@ -299,16 +299,13 @@
         // Check if user is approved disciple
         async function checkDiscipleStatus() {
             try {
-                const usersResponse = await fetch(`${API_URL}/admin`, {
+                const response = await fetch(`${API_URL}/admin/status`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
-                if (usersResponse.ok) {
-                    const users = await usersResponse.json();
-                    // Convert both to strings for reliable comparison
-                    const userId = String(currentUser.id);
-                    const user = users.find(u => String(u._id) === userId);
-                    if (user && user.isDisciple) {
+                if (response.ok) {
+                    const userData = await response.json();
+                    if (userData.isDisciple) {
                         isDisciple = true;
                         document.getElementById('chatView').classList.remove('hidden');
                         document.getElementById('unauthorizedView').style.display = 'none';
@@ -316,8 +313,7 @@
                         document.getElementById('chatView').classList.add('hidden');
                         document.getElementById('unauthorizedView').style.display = 'block';
                     }
-                } else if (usersResponse.status === 403) {
-                    // User is not admin, can't access admin API
+                } else {
                     document.getElementById('chatView').classList.add('hidden');
                     document.getElementById('unauthorizedView').style.display = 'block';
                 }

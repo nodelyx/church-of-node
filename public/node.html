@@ -67,6 +67,13 @@
             justify-content: center;
             align-items: center;
         }
+
+        .horizontal-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+        }
         
         .dot {
             width: 24px;
@@ -76,6 +83,10 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .dot:hover {
@@ -88,6 +99,10 @@
             background-color: #ffffff;
             box-shadow: 0 0 20px #ffffff;
             transform: scale(1.2);
+        }
+
+        .dot.link {
+            display: inline-flex;
         }
         
         .audio-player {
@@ -136,12 +151,14 @@
                     Your browser does not support the audio element.
                 </audio>
             </li>
-            <li class="audio-item">
+            <li class="audio-item horizontal-row">
+                <a href="/forum" class="dot link"></a>
                 <div class="dot" onclick="toggleAudio(2)"></div>
                 <audio class="audio-player" id="audio-2">
                     <source src="3.wav" type="audio/wav">
                     Your browser does not support the audio element.
                 </audio>
+                <a href="https://discord.gg/your-invite-code" class="dot link" target="_blank"></a>
             </li>
             <li class="audio-item">
                 <div class="dot" onclick="toggleAudio(3)"></div>
@@ -166,7 +183,7 @@
         
         function toggleAudio(index) {
             const audio = document.getElementById('audio-' + index);
-            const dots = document.querySelectorAll('.dot');
+            const dots = document.querySelectorAll('.dot:not(.link)');
             
             // If clicking the same dot that's playing, stop it
             if (currentAudio === index && audioStates[index]) {

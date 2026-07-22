@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Church of Node - Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Georgia', serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: normal;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .header h1:hover {
+            opacity: 0.7;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .profile-view {
+            display: block;
+        }
+
+        .profile-view.hidden {
+            display: none;
+        }
+
+        .profile-info {
+            margin-bottom: 40px;
+        }
+
+        .profile-label {
+            font-size: 0.85em;
+            color: #aaaaaa;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .profile-value {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        .divider {
+            border-bottom: 1px solid #333;
+            margin: 30px 0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border: 2px solid #ffffff;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            border-radius: 2px;
+        }
+
+        .button:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .logout-btn {
+            background-color: #ff4444;
+            color: #ffffff;
+            border-color: #ff4444;
+            padding: 8px 20px;
+            font-size: 0.85em;
+        }
+
+        .logout-btn:hover {
+            background-color: #cc0000;
+            border-color: #cc0000;
+        }
+
+        .auth-section {
+            display: none;
+        }
+
+        .auth-section.active {
+            display: block;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            text-align: center;
+        }
+
+        .message.error {
+            background-color: #330000;
+            color: #ff6b6b;
+        }
+
+        .message.success {
+            background-color: #003300;
+            color: #6bff6b;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 onclick="goHome()">Church of Node</h1>
+    </div>
+
+    <div class="container">
+        <div id="messageBox"></div>
+
+        <!-- Profile View -->
+        <div id="profileView" class="profile-view">
+            <div class="profile-info">
+                <div class="profile-label">Username</div>
+                <div class="profile-value" id="username"></div>
+
+                <div class="profile-label">Email</div>
+                <div class="profile-value" id="email"></div>
+
+                <div class="divider"></div>
+
+                <button class="button logout-btn" onclick="logout()">LOGOUT</button>
+            </div>
+        </div>
+
+        <!-- Unauthorized View -->
+        <div id="unauthorizedView" class="auth-section">
+            <h2 style="font-size: 1.8em; font-weight: normal; letter-spacing: 1px; margin-bottom: 30px;">Access Denied</h2>
+            <p style="font-size: 0.95em; color: #aaaaaa; margin-bottom: 30px;">You are not logged in.</p>
+            <a href="/forum" class="button" style="display: inline-block;">GO TO FORUM</a>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+        let token = localStorage.getItem('token');
+        let currentUser = JSON.parse(localStorage.getItem('user')) || null;
+
+        // Initialize
+        function init() {
+            if (!token || !currentUser) {
+                document.getElementById('profileView').classList.add('hidden');
+                document.getElementById('unauthorizedView').classList.add('active');
+                return;
+            }
+
+            displayProfile();
+        }
+
+        // Display profile
+        function displayProfile() {
+            document.getElementById('username').textContent = currentUser.username;
+            document.getElementById('email').textContent = currentUser.email;
+        }
+
+        // Navigation
+        function goHome() {
+            window.location.href = '/';
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/forum';
+        }
+
+        // Initialize on page load
+        init();
+    </script>
+</body>
+</html>

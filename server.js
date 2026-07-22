@@ -84,6 +84,11 @@ app.get('/forum', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'forum', 'index.html'));
 });
 
+// Serve profile page
+app.get('/me', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'me.html'));
+});
+
 // Serve admin dashboard
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));

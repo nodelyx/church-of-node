@@ -46,23 +46,25 @@ router.get('/:id', async (req, res) => {
 // Create thread
 router.post('/', auth, async (req, res) => {
   try {
-    const { title, content, categoryId } = req.body;
+    const { title, content } = req.body;
+
+    if (!title || !content) {
+      return res.status(400).json({ error: 'Title and content are required' });
+    }
 
     const thread = new Thread({
       title,
       content,
       author: req.user.userId,
-      category: categoryId,
     });
 
     await thread.save();
     await thread.populate('author', 'username avatar');
-    await thread.populate('category', 'name color');
 
     res.json(thread);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

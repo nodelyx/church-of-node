@@ -15,62 +15,60 @@
             background-color: #000000;
             color: #ffffff;
             font-family: 'Georgia', serif;
-            line-height: 1.6;
+            min-height: 100vh;
+            padding: 40px 20px;
         }
 
-        header {
-            background-color: #111111;
-            padding: 20px;
-            border-bottom: 1px solid #333;
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
         }
 
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        h1 {
-            font-size: 28px;
+        .header h1 {
+            font-size: 2.5em;
             font-weight: normal;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-        }
-
-        button {
-            background-color: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
             cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
+            transition: opacity 0.3s ease;
         }
 
-        button:hover {
-            background-color: #e0e0e0;
+        .header h1:hover {
+            opacity: 0.7;
+        }
+
+        .header .username {
+            font-size: 0.9em;
+            color: #aaaaaa;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .header .username:hover {
+            color: #ffffff;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .chat-view {
+            display: block;
+        }
+
+        .chat-view.hidden {
+            display: none;
         }
 
         .chat-container {
-            background-color: #111111;
-            border: 1px solid #333;
-            border-radius: 8px;
-            overflow: hidden;
+            background-color: transparent;
             display: flex;
             flex-direction: column;
-            height: 600px;
+            height: 500px;
+            border: 1px solid #333;
+            border-radius: 2px;
         }
 
         .messages {
@@ -83,25 +81,32 @@
         }
 
         .message {
-            background-color: #000000;
-            padding: 12px;
-            border-left: 2px solid #ffffff;
-            border-radius: 4px;
+            background-color: transparent;
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
             animation: slideIn 0.3s ease;
+        }
+
+        .message:last-child {
+            border-bottom: none;
         }
 
         .message-author {
             font-weight: bold;
             margin-bottom: 5px;
-            color: #aaaaaa;
+            color: #ffffff;
+            font-size: 0.95em;
         }
 
         .message-content {
             word-wrap: break-word;
+            line-height: 1.6;
+            color: #e0e0e0;
+            font-size: 0.95em;
         }
 
         .message-time {
-            font-size: 12px;
+            font-size: 0.85em;
             color: #666666;
             margin-top: 5px;
         }
@@ -110,19 +115,20 @@
             padding: 20px;
             border-top: 1px solid #333;
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
 
         textarea {
             flex: 1;
-            padding: 10px;
-            background-color: #000000;
+            padding: 12px;
+            background-color: #111111;
             border: 1px solid #333;
             color: #ffffff;
-            border-radius: 4px;
+            border-radius: 2px;
             font-family: 'Georgia', serif;
             resize: none;
             max-height: 100px;
+            font-size: 0.95em;
         }
 
         textarea:focus {
@@ -130,31 +136,63 @@
             border-color: #ffffff;
         }
 
-        .send-btn {
-            padding: 10px 20px;
+        .button {
+            display: inline-block;
+            padding: 10px 25px;
             background-color: #ffffff;
             color: #000000;
-            border: none;
-            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border: 2px solid #ffffff;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            border-radius: 2px;
+        }
+
+        .button:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .send-btn {
+            padding: 10px 25px;
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+            border-radius: 2px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            white-space: nowrap;
         }
 
         .send-btn:hover {
-            background-color: #e0e0e0;
+            background-color: #000000;
+            color: #ffffff;
         }
 
         .unauthorized {
             text-align: center;
-            padding: 40px;
-            color: #ff6b6b;
+            padding: 60px 40px;
         }
 
-        .logout-btn {
-            background-color: #ff4444;
-            color: #ffffff;
-            padding: 8px 15px;
+        .unauthorized h2 {
+            font-size: 1.8em;
+            font-weight: normal;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .unauthorized p {
+            font-size: 0.95em;
+            color: #aaaaaa;
+            margin-bottom: 10px;
         }
 
         @keyframes slideIn {
@@ -168,61 +206,53 @@
             }
         }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #aaaaaa;
-            border-top: 1px solid #333;
-            margin-top: 40px;
+        .message::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .message::-webkit-scrollbar-track {
+            background: #000000;
+        }
+
+        .message::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        .message::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <h1>Disciples</h1>
-            <div class="nav-buttons">
-                <a href="/" style="color: #ffffff; text-decoration: none;">← Back to Home</a>
-                <a href="/forum" style="color: #ffffff; text-decoration: none;">Forum</a>
-                <div id="userNav">
-                    <button onclick="login()">Login</button>
-                </div>
-                <div id="loggedInNav" style="display: none;">
-                    <div class="user-profile">
-                        <span id="username"></span>
-                        <button class="logout-btn" onclick="logout()">Logout</button>
-                    </div>
-                </div>
+    <div class="header">
+        <h1 onclick="goHome()">Church of Node</h1>
+        <div id="userDisplay" style="display: none;">
+            <div class="username" onclick="goToProfile()">
+                <span id="usernameText"></span>
             </div>
         </div>
-    </header>
+    </div>
 
     <div class="container">
-        <div id="chatView" style="display: none;">
+        <!-- Chat View -->
+        <div id="chatView" class="chat-view">
             <div class="chat-container">
                 <div class="messages" id="messages"></div>
                 <div class="input-area">
                     <textarea id="messageInput" placeholder="Type your message..." rows="2"></textarea>
-                    <button class="send-btn" onclick="sendMessage()">Send</button>
+                    <button class="send-btn" onclick="sendMessage()">SEND</button>
                 </div>
             </div>
         </div>
-        <div id="unauthorizedView" class="unauthorized">
+
+        <!-- Unauthorized View -->
+        <div id="unauthorizedView">
             <h2>Access Denied</h2>
             <p>You are not approved as a disciple yet.</p>
             <p>Contact an administrator to request access.</p>
         </div>
     </div>
-
-    <footer>
-        <p>&copy; 2026 Church of Node. All rights reserved.</p>
-    </footer>
 
     <script>
         const API_URL = '/api';
@@ -239,22 +269,36 @@
                 return;
             }
 
-            updateUserNav();
-            await checkDiscpleStatus();
+            updateUserDisplay();
+            await checkDiscipleStatus();
             if (isDisciple) {
                 await loadMessages();
-                // Poll for new messages every 3 seconds instead of reloading everything
+                // Poll for new messages every 3 seconds
                 pollInterval = setInterval(pollNewMessages, 3000);
             }
         }
 
+        // Update user display
+        function updateUserDisplay() {
+            const userDisplay = document.getElementById('userDisplay');
+            if (token && currentUser) {
+                userDisplay.style.display = 'block';
+                document.getElementById('usernameText').textContent = currentUser.username;
+            }
+        }
+
+        // Navigation
+        function goHome() {
+            window.location.href = '/';
+        }
+
+        function goToProfile() {
+            window.location.href = '/me';
+        }
+
         // Check if user is approved disciple
-        async function checkDiscpleStatus() {
+        async function checkDiscipleStatus() {
             try {
-                const response = await fetch(`${API_URL}/threads`);
-                const threads = await response.json();
-                
-                // Fetch current user from server to get latest status
                 const usersResponse = await fetch(`${API_URL}/admin`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -264,10 +308,10 @@
                     const user = users.find(u => u._id === currentUser.id);
                     if (user && user.isDisciple) {
                         isDisciple = true;
-                        document.getElementById('chatView').style.display = 'block';
+                        document.getElementById('chatView').classList.remove('hidden');
                         document.getElementById('unauthorizedView').style.display = 'none';
                     } else {
-                        document.getElementById('chatView').style.display = 'none';
+                        document.getElementById('chatView').classList.add('hidden');
                         document.getElementById('unauthorizedView').style.display = 'block';
                     }
                 }
@@ -297,7 +341,7 @@
                     messagesDiv.scrollTop = messagesDiv.scrollHeight;
                 } else if (response.status === 403) {
                     isDisciple = false;
-                    document.getElementById('chatView').style.display = 'none';
+                    document.getElementById('chatView').classList.add('hidden');
                     document.getElementById('unauthorizedView').style.display = 'block';
                 }
             } catch (err) {
@@ -329,7 +373,7 @@
                 } else if (response.status === 403) {
                     isDisciple = false;
                     clearInterval(pollInterval);
-                    document.getElementById('chatView').style.display = 'none';
+                    document.getElementById('chatView').classList.add('hidden');
                     document.getElementById('unauthorizedView').style.display = 'block';
                 }
             } catch (err) {
@@ -390,33 +434,6 @@
             } catch (err) {
                 console.error('Error sending message');
             }
-        }
-
-        function updateUserNav() {
-            const userNav = document.getElementById('userNav');
-            const loggedInNav = document.getElementById('loggedInNav');
-
-            if (token && currentUser) {
-                userNav.style.display = 'none';
-                loggedInNav.style.display = 'flex';
-                document.getElementById('username').textContent = currentUser.username;
-            } else {
-                userNav.style.display = 'flex';
-                loggedInNav.style.display = 'none';
-            }
-        }
-
-        function logout() {
-            token = null;
-            currentUser = null;
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            if (pollInterval) clearInterval(pollInterval);
-            window.location.href = '/forum';
-        }
-
-        function login() {
-            window.location.href = '/forum';
         }
 
         function escapeHtml(text) {

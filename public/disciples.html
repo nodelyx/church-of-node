@@ -87,6 +87,7 @@
             padding: 12px;
             border-left: 2px solid #ffffff;
             border-radius: 4px;
+            animation: slideIn 0.3s ease;
         }
 
         .message-author {
@@ -154,10 +155,6 @@
             background-color: #ff4444;
             color: #ffffff;
             padding: 8px 15px;
-        }
-
-        .message {
-            animation: slideIn 0.3s ease;
         }
 
         @keyframes slideIn {
@@ -232,6 +229,8 @@
         let token = localStorage.getItem('token');
         let currentUser = JSON.parse(localStorage.getItem('user')) || null;
         let isDisciple = false;
+        let lastMessageTime = null;
+        let pollInterval = null;
 
         // Initialize
         async function init() {
@@ -243,8 +242,9 @@
             updateUserNav();
             await checkDiscpleStatus();
             if (isDisciple) {
-                loadMessages();
-                setInterval(loadMessages, 2000);
+                await loadMessages();
+                // Poll for new messages every 3 seconds instead of reloading everything
+                pollInterval = setInterval(pollNewMessages, 3000);
             }
         }
 
@@ -276,7 +276,7 @@
             }
         }
 
-        // Load messages
+        // Load all messages initially
         async function loadMessages() {
             try {
                 const response = await fetch(`${API_URL}/messages`, {
@@ -289,14 +289,8 @@
                     
                     messagesDiv.innerHTML = '';
                     messages.forEach(msg => {
-                        const msgElement = document.createElement('div');
-                        msgElement.className = 'message';
-                        msgElement.innerHTML = `
-                            <div class="message-author">${msg.author.username}</div>
-                            <div class="message-content">${escapeHtml(msg.content)}</div>
-                            <div class="message-time">${new Date(msg.createdAt).toLocaleTimeString()}</div>
-                        `;
-                        messagesDiv.appendChild(msgElement);
+                        addMessageToDOM(msg);
+                        lastMessageTime = msg.createdAt;
                     });
 
                     // Auto scroll to bottom
@@ -308,6 +302,60 @@
                 }
             } catch (err) {
                 console.error('Error loading messages');
+            }
+        }
+
+        // Poll for only new messages
+        async function pollNewMessages() {
+            try {
+                const response = await fetch(`${API_URL}/messages`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const messages = await response.json();
+                    const messagesDiv = document.getElementById('messages');
+                    
+                    // Only add new messages that came after the last one
+                    messages.forEach(msg => {
+                        if (!lastMessageTime || new Date(msg.createdAt) > new Date(lastMessageTime)) {
+                            addMessageToDOM(msg);
+                            lastMessageTime = msg.createdAt;
+                        }
+                    });
+
+                    // Auto scroll to bottom
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                } else if (response.status === 403) {
+                    isDisciple = false;
+                    clearInterval(pollInterval);
+                    document.getElementById('chatView').style.display = 'none';
+                    document.getElementById('unauthorizedView').style.display = 'block';
+                }
+            } catch (err) {
+                console.error('Error polling messages');
+            }
+        }
+
+        // Add a message to the DOM without clearing others
+        function addMessageToDOM(msg) {
+            const messagesDiv = document.getElementById('messages');
+            
+            // Check if message already exists
+            const existingMsg = Array.from(messagesDiv.children).find(el => 
+                el.dataset.messageId === msg._id
+            );
+            
+            if (!existingMsg) {
+                const msgElement = document.createElement('div');
+                msgElement.className = 'message';
+                msgElement.dataset.messageId = msg._id;
+                msgElement.innerHTML = `
+                    <div class="message-author">${msg.author.username}</div>
+                    <div class="message-content">${escapeHtml(msg.content)}</div>
+                    <div class="message-time">${new Date(msg.createdAt).toLocaleTimeString()}</div>
+                `;
+                messagesDiv.appendChild(msgElement);
             }
         }
 
@@ -330,8 +378,14 @@
                 });
 
                 if (response.ok) {
+                    const newMsg = await response.json();
                     document.getElementById('messageInput').value = '';
-                    loadMessages();
+                    addMessageToDOM(newMsg);
+                    lastMessageTime = newMsg.createdAt;
+                    
+                    // Auto scroll to bottom
+                    const messagesDiv = document.getElementById('messages');
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
                 }
             } catch (err) {
                 console.error('Error sending message');
@@ -357,6 +411,7 @@
             currentUser = null;
             localStorage.removeItem('token');
             localStorage.removeItem('user');
+            if (pollInterval) clearInterval(pollInterval);
             window.location.href = '/forum';
         }
 
@@ -374,6 +429,11 @@
             };
             return text.replace(/[&<>"']/g, m => map[m]);
         }
+
+        // Clean up interval on page unload
+        window.addEventListener('beforeunload', () => {
+            if (pollInterval) clearInterval(pollInterval);
+        });
 
         // Initialize on page load
         init();

@@ -15,172 +15,146 @@
             background-color: #000000;
             color: #ffffff;
             font-family: 'Georgia', serif;
-            line-height: 1.6;
+            min-height: 100vh;
+            padding: 40px 20px;
         }
 
-        header {
-            background-color: #111111;
-            padding: 20px;
-            border-bottom: 1px solid #333;
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
         }
 
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        h1 {
-            font-size: 28px;
+        .header h1 {
+            font-size: 2.5em;
             font-weight: normal;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
         }
 
-        .nav-buttons {
+        .header h1:hover {
+            opacity: 0.7;
+        }
+
+        .header .username {
+            font-size: 0.9em;
+            color: #aaaaaa;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .header .username:hover {
+            color: #ffffff;
+        }
+
+        .header .auth-buttons {
+            margin-top: 20px;
             display: flex;
             gap: 15px;
-        }
-
-        button {
-            background-color: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #e0e0e0;
+            justify-content: center;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        .thread-item {
-            background-color: #111111;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            border: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .threads-view {
+            display: block;
         }
 
-        .thread-item:hover {
-            border-color: #ffffff;
-        }
-
-        .thread-info {
-            flex: 1;
-        }
-
-        .thread-title {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .thread-meta {
-            font-size: 12px;
-            color: #aaaaaa;
-        }
-
-        .thread-replies {
-            color: #aaaaaa;
-            font-size: 14px;
-        }
-
-        .create-thread-btn {
-            margin-bottom: 20px;
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        .auth-section {
+        .threads-view.hidden {
             display: none;
         }
 
-        .auth-section.active {
-            display: block;
-            max-width: 400px;
+        .thread-item {
+            background-color: transparent;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
         }
 
-        .form-group {
-            margin-bottom: 15px;
+        .thread-item:hover {
+            border-bottom-color: #ffffff;
         }
 
-        label {
-            display: block;
+        .thread-title {
+            font-size: 1.1em;
             margin-bottom: 5px;
-            font-size: 14px;
-        }
-
-        input,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            background-color: #111111;
-            border: 1px solid #333;
             color: #ffffff;
-            border-radius: 4px;
-            font-family: 'Georgia', serif;
-            resize: vertical;
         }
 
-        input:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #ffffff;
+        .thread-meta {
+            font-size: 0.85em;
+            color: #aaaaaa;
+            letter-spacing: 0.5px;
         }
 
         .thread-detail {
             display: none;
-            background-color: #111111;
-            padding: 30px;
-            border-radius: 8px;
         }
 
         .thread-detail.active {
             display: block;
         }
 
+        .back-link {
+            font-size: 0.9em;
+            color: #aaaaaa;
+            text-decoration: none;
+            cursor: pointer;
+            margin-bottom: 30px;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #ffffff;
+        }
+
         .thread-detail-title {
-            font-size: 24px;
-            margin-bottom: 10px;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-weight: normal;
+            letter-spacing: 1px;
         }
 
         .thread-detail-meta {
             color: #aaaaaa;
-            margin-bottom: 20px;
-            font-size: 14px;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
         }
 
         .thread-detail-content {
             margin-bottom: 30px;
             line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
         .replies-section {
-            margin-top: 30px;
+            margin-top: 40px;
+            padding-top: 30px;
             border-top: 1px solid #333;
-            padding-top: 20px;
+        }
+
+        .replies-section h3 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: normal;
+            letter-spacing: 1px;
         }
 
         .reply-item {
-            background-color: #000000;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 2px solid #ffffff;
-            border-radius: 4px;
+            background-color: transparent;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+            text-align: left;
         }
 
         .reply-author {
@@ -190,37 +164,125 @@
 
         .reply-content {
             margin-bottom: 10px;
+            line-height: 1.6;
         }
 
         .reply-meta {
-            font-size: 12px;
+            font-size: 0.85em;
             color: #aaaaaa;
         }
 
-        .login-section {
+        .reply-form {
             display: none;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #333;
         }
 
-        .login-section.active {
+        .reply-form.active {
             display: block;
-            max-width: 400px;
+        }
+
+        .reply-form h3 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            letter-spacing: 1px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: #111111;
+            border: 1px solid #333;
+            color: #ffffff;
+            border-radius: 2px;
+            font-family: 'Georgia', serif;
+            font-size: 0.95em;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #ffffff;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border: 2px solid #ffffff;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            border-radius: 2px;
+        }
+
+        .button:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        .auth-section {
+            display: none;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .auth-section.active {
+            display: block;
+        }
+
+        .auth-section h2 {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            font-weight: normal;
+            letter-spacing: 1px;
         }
 
         .auth-toggle {
-            margin-top: 15px;
+            margin-top: 20px;
             text-align: center;
+            font-size: 0.9em;
         }
 
         .auth-toggle a {
             color: #ffffff;
             cursor: pointer;
             text-decoration: underline;
+            transition: opacity 0.3s ease;
+        }
+
+        .auth-toggle a:hover {
+            opacity: 0.7;
         }
 
         .message {
             padding: 15px;
             margin-bottom: 20px;
-            border-radius: 4px;
+            border-radius: 2px;
+            text-align: center;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .message.error {
@@ -233,91 +295,65 @@
             color: #6bff6b;
         }
 
-        footer {
-            text-align: center;
-            padding: 20px;
+        .no-threads {
             color: #aaaaaa;
-            border-top: 1px solid #333;
-            margin-top: 40px;
+            text-align: center;
+            padding: 40px;
+            font-size: 0.95em;
         }
 
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .like-btn {
+            margin-top: 20px;
         }
 
-        .logout-btn {
-            background-color: #ff4444;
-            color: #ffffff;
-            padding: 8px 15px;
-        }
-
-        .back-button {
-            margin-bottom: 20px;
-            background-color: #333333;
-            color: #ffffff;
-        }
-
-        .threads-view {
-            display: block;
-        }
-
-        .threads-view.hidden {
-            display: none;
+        textarea {
+            min-height: 120px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <h1>Church of Node</h1>
-            <div class="nav-buttons">
-                <a href="/" style="color: #ffffff; text-decoration: none;">← Back to Home</a>
-                <div id="userNav">
-                    <button onclick="showLoginForm()">Login</button>
-                    <button onclick="showRegisterForm()">Register</button>
-                </div>
-                <div id="loggedInNav" style="display: none;">
-                    <div class="user-profile">
-                        <span id="username"></span>
-                        <button class="logout-btn" onclick="logout()">Logout</button>
-                    </div>
-                </div>
+    <div class="header">
+        <h1 onclick="goHome()">Church of Node</h1>
+        <div id="userDisplay" style="display: none;">
+            <div class="username" onclick="goToProfile()">
+                <span id="usernameText"></span>
             </div>
         </div>
-    </header>
+        <div id="guestDisplay" class="auth-buttons">
+            <button class="button" onclick="showLoginForm()">LOGIN</button>
+            <button class="button" onclick="showRegisterForm()">REGISTER</button>
+        </div>
+    </div>
 
     <div class="container">
         <div id="messageBox"></div>
 
         <!-- Threads View -->
         <div id="threadsView" class="threads-view">
-            <h2 style="margin-bottom: 20px;">Community Discussion</h2>
-            <button class="create-thread-btn" onclick="showCreateThreadForm()" id="createThreadBtn" style="display: none;">Create New Thread</button>
+            <button class="button" onclick="showCreateThreadForm()" id="createThreadBtn" style="display: none; margin-bottom: 30px;">CREATE NEW THREAD</button>
             <div id="threadsList"></div>
         </div>
 
         <!-- Thread Detail View -->
-        <div id="threadDetailView" class="thread-detail">
-            <button class="back-button" onclick="backToThreads()">← Back to Threads</button>
+        <div id="threadDetailView">
+            <a class="back-link" onclick="backToThreads()">← Back to Threads</a>
             <h2 id="detailTitle" class="thread-detail-title"></h2>
             <div id="detailMeta" class="thread-detail-meta"></div>
             <div id="detailContent" class="thread-detail-content"></div>
             <div id="detailLikes"></div>
-            <div class="replies-section" id="repliesSection"></div>
-            <div id="replyForm" style="display: none; margin-top: 30px;">
+            <div id="repliesSection" class="replies-section"></div>
+            <div id="replyForm" class="reply-form">
                 <h3>Add Reply</h3>
                 <div class="form-group">
                     <textarea id="replyContent" placeholder="Your reply..."></textarea>
                 </div>
-                <button onclick="submitReply()">Post Reply</button>
+                <button class="button" onclick="submitReply()">POST REPLY</button>
             </div>
         </div>
 
         <!-- Auth Forms -->
-        <div id="loginSection" class="login-section">
-            <h2 style="margin-bottom: 20px;">Login</h2>
+        <div id="loginSection" class="auth-section">
+            <h2>LOGIN</h2>
             <div class="form-group">
                 <label>Email</label>
                 <input type="email" id="loginEmail" placeholder="your@email.com">
@@ -326,14 +362,14 @@
                 <label>Password</label>
                 <input type="password" id="loginPassword" placeholder="••••••••">
             </div>
-            <button onclick="login()" style="width: 100%;">Login</button>
+            <button class="button" onclick="login()" style="width: 100%;">LOGIN</button>
             <div class="auth-toggle">
                 Don't have an account? <a onclick="showRegisterForm()">Register here</a>
             </div>
         </div>
 
         <div id="registerSection" class="auth-section">
-            <h2 style="margin-bottom: 20px;">Create Account</h2>
+            <h2>CREATE ACCOUNT</h2>
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" id="registerUsername" placeholder="your username">
@@ -346,14 +382,14 @@
                 <label>Password</label>
                 <input type="password" id="registerPassword" placeholder="••••••••">
             </div>
-            <button onclick="register()" style="width: 100%;">Create Account</button>
+            <button class="button" onclick="register()" style="width: 100%;">CREATE ACCOUNT</button>
             <div class="auth-toggle">
                 Already have an account? <a onclick="showLoginForm()">Login here</a>
             </div>
         </div>
 
         <div id="createThreadSection" class="auth-section">
-            <h2 style="margin-bottom: 20px;">Create New Thread</h2>
+            <h2>CREATE NEW THREAD</h2>
             <div class="form-group">
                 <label>Title</label>
                 <input type="text" id="threadTitle" placeholder="Thread title">
@@ -362,14 +398,10 @@
                 <label>Content</label>
                 <textarea id="threadContent" placeholder="Write your thread content..."></textarea>
             </div>
-            <button onclick="submitThread()" style="width: 100%;">Create Thread</button>
-            <button onclick="backToThreads()" style="width: 100%; background-color: #333333; margin-top: 10px;">Cancel</button>
+            <button class="button" onclick="submitThread()" style="width: 100%;">CREATE THREAD</button>
+            <button class="button" onclick="backToThreads()" style="width: 100%; background-color: #111111; color: #ffffff; border-color: #333; margin-top: 10px;">CANCEL</button>
         </div>
     </div>
-
-    <footer>
-        <p>&copy; 2026 Church of Node. All rights reserved.</p>
-    </footer>
 
     <script>
         const API_URL = '/api';
@@ -379,25 +411,35 @@
 
         // Initialize
         function init() {
-            updateUserNav();
+            updateUserDisplay();
             loadThreads();
         }
 
-        // Update user navigation
-        function updateUserNav() {
-            const userNav = document.getElementById('userNav');
-            const loggedInNav = document.getElementById('loggedInNav');
+        // Update user display
+        function updateUserDisplay() {
+            const userDisplay = document.getElementById('userDisplay');
+            const guestDisplay = document.getElementById('guestDisplay');
+            const createThreadBtn = document.getElementById('createThreadBtn');
 
             if (token && currentUser) {
-                userNav.style.display = 'none';
-                loggedInNav.style.display = 'flex';
-                document.getElementById('username').textContent = currentUser.username;
-                document.getElementById('createThreadBtn').style.display = 'inline-block';
+                userDisplay.style.display = 'block';
+                guestDisplay.style.display = 'none';
+                document.getElementById('usernameText').textContent = currentUser.username;
+                createThreadBtn.style.display = 'inline-block';
             } else {
-                userNav.style.display = 'flex';
-                loggedInNav.style.display = 'none';
-                document.getElementById('createThreadBtn').style.display = 'none';
+                userDisplay.style.display = 'none';
+                guestDisplay.style.display = 'flex';
+                createThreadBtn.style.display = 'none';
             }
+        }
+
+        // Navigation
+        function goHome() {
+            window.location.href = '/';
+        }
+
+        function goToProfile() {
+            window.location.href = '/me';
         }
 
         // Load threads
@@ -409,7 +451,7 @@
                 list.innerHTML = '';
 
                 if (threads.length === 0) {
-                    list.innerHTML = '<p style="color: #aaaaaa;">No threads yet. Be the first to create one!</p>';
+                    list.innerHTML = '<div class="no-threads">No threads yet. Be the first to create one!</div>';
                     return;
                 }
 
@@ -418,11 +460,8 @@
                     item.className = 'thread-item';
                     item.onclick = () => viewThread(thread._id);
                     item.innerHTML = `
-                        <div class="thread-info">
-                            <div class="thread-title">${thread.title}</div>
-                            <div class="thread-meta">by ${thread.author.username} • ${new Date(thread.createdAt).toLocaleDateString()}</div>
-                        </div>
-                        <div class="thread-replies">${thread.replies.length} replies</div>
+                        <div class="thread-title">${thread.title}</div>
+                        <div class="thread-meta">by ${thread.author.username} • ${new Date(thread.createdAt).toLocaleDateString()}</div>
                     `;
                     list.appendChild(item);
                 });
@@ -451,7 +490,7 @@
                 const likeCount = thread.likes.length;
                 const userLiked = token && thread.likes.some(id => id === currentUser.id);
                 document.getElementById('detailLikes').innerHTML = `
-                    <button onclick="likeThread()" style="background-color: ${userLiked ? '#ffffff' : '#333333'}; color: ${userLiked ? '#000000' : '#ffffff'};">
+                    <button class="button like-btn" onclick="likeThread()" style="background-color: ${userLiked ? '#ffffff' : '#111111'}; color: ${userLiked ? '#000000' : '#ffffff'}; border-color: #ffffff;">
                         ❤ ${likeCount}
                     </button>
                 `;
@@ -478,9 +517,9 @@
                 // Reply form
                 const replyForm = document.getElementById('replyForm');
                 if (token) {
-                    replyForm.style.display = 'block';
+                    replyForm.classList.add('active');
                 } else {
-                    replyForm.style.display = 'none';
+                    replyForm.classList.remove('active');
                 }
             } catch (err) {
                 showMessage('Error loading thread', 'error');
@@ -513,7 +552,7 @@
                     localStorage.setItem('token', token);
                     localStorage.setItem('user', JSON.stringify(currentUser));
                     showMessage('Account created successfully!', 'success');
-                    updateUserNav();
+                    updateUserDisplay();
                     document.getElementById('registerSection').classList.remove('active');
                     document.getElementById('threadsView').classList.remove('hidden');
                 } else {
@@ -548,7 +587,7 @@
                     localStorage.setItem('token', token);
                     localStorage.setItem('user', JSON.stringify(currentUser));
                     showMessage('Logged in successfully!', 'success');
-                    updateUserNav();
+                    updateUserDisplay();
                     document.getElementById('loginSection').classList.remove('active');
                     document.getElementById('threadsView').classList.remove('hidden');
                 } else {
@@ -557,18 +596,6 @@
             } catch (err) {
                 showMessage('Error logging in', 'error');
             }
-        }
-
-        function logout() {
-            token = null;
-            currentUser = null;
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            updateUserNav();
-            document.getElementById('threadsView').classList.remove('hidden');
-            document.getElementById('loginSection').classList.remove('active');
-            document.getElementById('registerSection').classList.remove('active');
-            showMessage('Logged out successfully!', 'success');
         }
 
         // Thread functions
@@ -605,7 +632,6 @@
                 }
             } catch (err) {
                 showMessage('Error creating thread', 'error');
-                console.error(err);
             }
         }
 
@@ -662,22 +688,27 @@
         // UI Navigation
         function showLoginForm() {
             document.getElementById('threadsView').classList.add('hidden');
+            document.getElementById('threadDetailView').classList.remove('active');
             document.getElementById('loginSection').classList.add('active');
         }
 
         function showRegisterForm() {
             document.getElementById('threadsView').classList.add('hidden');
+            document.getElementById('threadDetailView').classList.remove('active');
             document.getElementById('registerSection').classList.add('active');
         }
 
         function showCreateThreadForm() {
             document.getElementById('threadsView').classList.add('hidden');
+            document.getElementById('threadDetailView').classList.remove('active');
             document.getElementById('createThreadSection').classList.add('active');
         }
 
         function backToThreads() {
             document.getElementById('threadDetailView').classList.remove('active');
             document.getElementById('createThreadSection').classList.remove('active');
+            document.getElementById('loginSection').classList.remove('active');
+            document.getElementById('registerSection').classList.remove('active');
             document.getElementById('threadsView').classList.remove('hidden');
             loadThreads();
         }

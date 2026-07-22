@@ -20,6 +20,22 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+// Get current user's disciple status
+router.get('/status', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select('-password');
+    res.json({
+      isDisciple: user.isDisciple,
+      isAdmin: user.isAdmin,
+      username: user.username,
+      email: user.email
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
 // Approve user as disciple
 router.post('/:userId/approve', auth, async (req, res) => {
   try {

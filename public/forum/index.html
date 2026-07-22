@@ -335,7 +335,7 @@
         </div>
 
         <!-- Thread Detail View -->
-        <div id="threadDetailView">
+        <div id="threadDetailView" class="thread-detail">
             <a class="back-link" onclick="backToThreads()">← Back to Threads</a>
             <h2 id="detailTitle" class="thread-detail-title"></h2>
             <div id="detailMeta" class="thread-detail-meta"></div>
@@ -689,18 +689,24 @@
         function showLoginForm() {
             document.getElementById('threadsView').classList.add('hidden');
             document.getElementById('threadDetailView').classList.remove('active');
+            document.getElementById('createThreadSection').classList.remove('active');
+            document.getElementById('registerSection').classList.remove('active');
             document.getElementById('loginSection').classList.add('active');
         }
 
         function showRegisterForm() {
             document.getElementById('threadsView').classList.add('hidden');
             document.getElementById('threadDetailView').classList.remove('active');
+            document.getElementById('createThreadSection').classList.remove('active');
+            document.getElementById('loginSection').classList.remove('active');
             document.getElementById('registerSection').classList.add('active');
         }
 
         function showCreateThreadForm() {
             document.getElementById('threadsView').classList.add('hidden');
             document.getElementById('threadDetailView').classList.remove('active');
+            document.getElementById('loginSection').classList.remove('active');
+            document.getElementById('registerSection').classList.remove('active');
             document.getElementById('createThreadSection').classList.add('active');
         }
 
